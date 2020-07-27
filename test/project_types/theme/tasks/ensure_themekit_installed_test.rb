@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'project_types/theme/test_helper'
 
 module Theme
@@ -44,6 +43,7 @@ module Theme
           .with(Themekit::THEMEKIT, 'this is data').never
         Digest::MD5.expects(:file).with(Themekit::THEMEKIT).never
         FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT).never
+        File.expects(:exist?).with(Themekit::THEMEKIT).returns(false)
 
         assert_nothing_raised do
           EnsureThemekitInstalled.call(@context)
@@ -81,7 +81,7 @@ module Theme
           .to_return(body: 'this is data')
 
         File.expects(:write)
-          .with(Themekit::THEMEKIT, 'this is data')
+          .with(Themekit::THEMEKIT, 'this is data'.force_encoding("UTF-8"))
       end
     end
   end

@@ -4,7 +4,6 @@ module Theme
 
     class << self
       def create(ctx, password:, store:, name:)
-        ensure_themekit_installed(ctx)
         # out, err, stat = ctx.capture3(THEMEKIT,
         #                                 "new",
         #                                 "--password=#{password}",

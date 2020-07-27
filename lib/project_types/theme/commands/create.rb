@@ -31,9 +31,13 @@ module Theme
           Dir.chdir(name)
         end
 
-        CLI::UI::Frame.open(@ctx.message('create.creating_theme', name)) do
+        CLI::UI::Frame.open(@ctx.message('theme.create.checking_themekit')) do
+          Themekit.ensure_themekit_installed(@ctx)
+        end
+
+        CLI::UI::Frame.open(@ctx.message('theme.create.creating_theme', name)) do
           unless Themekit.create(@ctx, name: name, password: password, store: store) # this one has continuous output
-            @ctx.abort('error')
+            @ctx.abort('Error')
           end
           # out, err, stat = Themekit.create(@ctx, name: name, password: password, store: store)
           # @ctx.puts out
