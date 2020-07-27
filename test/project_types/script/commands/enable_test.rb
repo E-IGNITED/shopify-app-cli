@@ -220,6 +220,40 @@ module Script
         end
       end
 
+      def test_calls_application_enable_with_invalid_configuration_file
+        ::FakeFS.with_fresh do
+          File.open("enable_config_file.yml", "w+") { |file| file.write("key1 \"value1\"\nkey2: \"value2\"") }
+        end
+        expected_configuration = {
+          entries: [
+            {
+              key: "key1",
+              value: "value1",
+            },
+            {
+              key: "key2",
+              value: "value2",
+            },
+          ],
+        }
+        Script::Layers::Application::EnableScript.expects(:call).with(
+          ctx: @context,
+          api_key: @api_key,
+          shop_domain: @shop_domain,
+          configuration: expected_configuration,
+          extension_point_type: @ep_type,
+          title: @script_name
+        )
+
+        @context
+          .expects(:puts)
+          .with(@context.message('script.enable.configuration_failed'))
+        # this will fail, no longer exists with this name - 2 puts needed
+        capture_io do
+          perform_command(config_file_path: "enable_config_file.yml")
+        end
+      end
+
       private
 
       def perform_command(config_props: nil, config_file_path: nil)

@@ -59,6 +59,11 @@ module Script
           })
         end
         configuration
+      rescue Errno::ENOENT, Psych::SyntaxError
+        UI::ErrorHandler.pretty_print_and_raise(
+          raise(Errors::InvalidConfigYAMLError),
+          failed_op: @ctx.message('script.enable.error.operation_failed')
+        )
       end
 
       # No slice pre Ruby 2.5 so roll our own

@@ -13,5 +13,6 @@ module Script
       end
     end
     class ScriptProjectAlreadyExistsError < ScriptProjectError; end
+    class InvalidConfigYAMLError < ScriptProjectError; end
   end
 end
